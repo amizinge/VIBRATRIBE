@@ -1,0 +1,81 @@
+# VIBRATRIBE Monorepo
+
+Web3-native social network where wallets are identities. This monorepo contains the Next.js frontend, Express + Prisma API, and Solidity/Hardhat contracts powering tipping and Spaces.
+
+## Directory Layout
+
+```
+apps/
+  web/        # Next.js 14 App Router frontend styled with Tailwind
+  api/        # Express + Prisma backend exposing REST endpoints
+contracts/    # Hardhat workspace with TipJar contract + tests
+infra/        # Docker Compose and deployment assets
+scripts/      # Utility scripts (seed, etc.)
+```
+
+## Getting Started
+
+1. **Install dependencies**
+   ```bash
+   npm install
+   npm --workspace apps/web install
+   npm --workspace apps/api install
+   npm --workspace contracts install
+   ```
+2. **Environment variables**
+   - Copy `apps/api/.env.example` → `.env.development` and set:
+     - `DATABASE_URL` (Postgres/Neon/etc.)
+     - `JWT_SECRET`
+     - `SIWE_*` fields for domain/URI/statement
+     - `WEB_ORIGIN` to `http://localhost:3000` for dev
+   - Frontend expects:
+     - `NEXT_PUBLIC_API_BASE` (e.g. `http://localhost:4000/api`)
+     - `NEXT_PUBLIC_CHAIN_ID` (default `56` BNB Chain)
+     - `NEXT_PUBLIC_RPC_URL`
+     - `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`
+   - Contracts use `RPC_URL` and `DEPLOYER_KEY` when deploying.
+3. **Database**
+   ```bash
+   cd apps/api
+   npx prisma migrate dev --name init
+   npm run prisma:seed
+   ```
+4. **Development servers**
+   ```bash
+   # Run API (http://localhost:4000)
+   npm run dev:api
+
+   # In another terminal run web (http://localhost:3000)
+   npm run dev:web
+   ```
+   Or concurrently: `npm run dev` (uses `concurrently`).
+
+## Testing & Builds
+
+- API build: `npm run build:api`
+- Web build: `npm run build:web`
+- Hardhat tests: `cd contracts && npm run test`
+
+## Docker
+
+`infra/docker-compose.yml` spins up Postgres + API + Web ready for local review:
+```bash
+cd infra
+docker compose up --build
+```
+
+## Smart Contracts
+
+- `contracts/contracts/TipJar.sol` handles ERC-20 tipping.
+- Deploy locally: `cd contracts && npx hardhat run scripts/deploy.ts --network localhost`.
+- Listen for `TipSent` events to populate on-chain activity feed.
+
+## Scripts
+
+- `scripts/seed.sh` seeds the development database via Prisma script inside API app.
+
+## Next Steps
+
+- Expand API modules (DMs, Spaces gating checks, notifications fan-out).
+- Wire frontend React Query hooks to live endpoints.
+- Add workers to index TipJar events and push notifications.
