@@ -74,6 +74,40 @@ docker compose up --build
 
 - `scripts/seed.sh` seeds the development database via Prisma script inside API app.
 
+## Deployment
+
+**Ready for Vercel deployment!** 🚀
+
+This project is configured for easy deployment to Vercel. See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
+
+### Quick Deploy to Vercel
+
+1. Push your code to GitHub
+2. Import project in [Vercel](https://vercel.com)
+3. Configure root directory: `apps/web`
+4. Add environment variables (see DEPLOYMENT.md)
+5. Deploy!
+
+The project includes:
+- ✅ `vercel.json` configuration
+- ✅ Optimized Next.js config for Vercel
+- ✅ Security headers configured
+- ✅ Monorepo build support
+
+### Environment Variables Needed
+
+**Frontend (Vercel):**
+- `NEXT_PUBLIC_API_BASE` - Your API URL
+- `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` - WalletConnect Project ID
+
+**Backend (Separate deployment):**
+- `DATABASE_URL` - PostgreSQL connection string
+- `JWT_SECRET` - Secret key for JWT
+- `WEB_ORIGIN` - Frontend domain
+- `SIWE_*` - Sign-In with Ethereum configuration
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete setup instructions.
+
 ## Next Steps
 
 - Expand API modules (DMs, Spaces gating checks, notifications fan-out).

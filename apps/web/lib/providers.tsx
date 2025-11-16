@@ -5,7 +5,7 @@ import { ReactNode, useState } from 'react';
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import { ThemeProvider } from 'next-themes';
 import { WagmiProvider } from 'wagmi';
-import { supportedChains, wagmiConfig } from '@/lib/wagmi';
+import { wagmiConfig } from '@/lib/wagmi';
 
 export default function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
@@ -25,7 +25,6 @@ export default function Providers({ children }: { children: ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <RainbowKitProvider
-            chains={supportedChains}
             theme={darkTheme({ accentColor: '#7e5dff', borderRadius: 'small' })}
           >
             {children}

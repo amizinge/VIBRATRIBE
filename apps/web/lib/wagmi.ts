@@ -10,7 +10,7 @@ import type { Chain } from 'wagmi/chains';
 import { bsc } from 'wagmi/chains';
 
 const chainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID ?? bsc.id);
-const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL ?? bsc.rpcUrls.public.http[0];
+const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL ?? bsc.rpcUrls.default.http[0];
 
 const dynamicChain: Chain = {
   ...bsc,
@@ -23,17 +23,23 @@ const dynamicChain: Chain = {
 
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? 'demo';
 
-const connectors = connectorsForWallets([
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: 'Recommended',
+      wallets: [
+        injectedWallet,
+        metaMaskWallet,
+        walletConnectWallet,
+        coinbaseWallet
+      ]
+    }
+  ],
   {
-    groupName: 'Recommended',
-    wallets: [
-      injectedWallet({ chains: [dynamicChain] }),
-      metaMaskWallet({ projectId, chains: [dynamicChain] }),
-      walletConnectWallet({ projectId, chains: [dynamicChain] }),
-      coinbaseWallet({ appName: 'VIBRATRIBE', chains: [dynamicChain] })
-    ]
+    appName: 'VIBRATRIBE',
+    projectId
   }
-]);
+);
 
 export const wagmiConfig = createConfig({
   chains: [dynamicChain],

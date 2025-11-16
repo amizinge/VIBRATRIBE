@@ -1,6 +1,9 @@
 import type { Post } from '@/types';
 import { MessageCircle, Repeat2, Heart, Coins } from 'lucide-react';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 
 export default function PostCard({ post }: { post: Post }) {
   return (
