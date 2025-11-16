@@ -6,7 +6,6 @@ import { isAddress } from 'viem';
 import { prisma } from '../config/prisma';
 import { config } from '../config/env';
 import { signJwt } from '../utils/jwt';
-import { Role } from '@prisma/client';
 
 const router = Router();
 

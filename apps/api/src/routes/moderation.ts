@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../config/prisma';
 import { AuthedRequest, requireAuth } from '../middleware/auth';
-import { Role } from '@prisma/client';
+import { STAFF_ROLES } from '../types/roles';
 
 const router = Router();
 
@@ -23,14 +23,14 @@ router.post('/report/:postId', requireAuth(), async (req: AuthedRequest, res) =>
   res.status(201).send();
 });
 
-router.get('/queue', requireAuth([Role.MODERATOR, Role.ADMIN]), async (_req, res) => {
+router.get('/queue', requireAuth(STAFF_ROLES), async (_req, res) => {
   const queue = await prisma.report.findMany({
     where: { status: 'pending' }
   });
   res.json(queue);
 });
 
-router.post('/resolve/:reportId', requireAuth([Role.MODERATOR, Role.ADMIN]), async (req, res) => {
+router.post('/resolve/:reportId', requireAuth(STAFF_ROLES), async (req, res) => {
   const parsed = z
     .object({ status: z.enum(['approved', 'removed']) })
     .safeParse(req.body);

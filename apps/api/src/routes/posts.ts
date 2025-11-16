@@ -6,10 +6,10 @@ import { requireAuth, AuthedRequest } from '../middleware/auth';
 const router = Router();
 
 router.get('/feed', requireAuth(), async (req: AuthedRequest, res) => {
-  const following = await prisma.follow.findMany({
+  const following = (await prisma.follow.findMany({
     where: { followerId: req.user!.id },
     select: { followingId: true }
-  });
+  })) as Array<{ followingId: string }>;
   const ids = following.map(f => f.followingId).concat(req.user!.id);
   const posts = await prisma.post.findMany({
     where: { authorId: { in: ids } },
