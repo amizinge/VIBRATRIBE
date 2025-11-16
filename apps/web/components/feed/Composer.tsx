@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type ChangeEvent } from 'react';
+import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import clsx from 'clsx';
@@ -31,7 +31,7 @@ export default function Composer() {
     <div className="bg-surface border border-white/5 rounded-2xl p-4 space-y-3">
       <textarea
         value={body}
-        onChange={(event: ChangeEvent<HTMLTextAreaElement>) => setBody(event.target.value)}
+        onChange={event => setBody(event.currentTarget.value)}
         placeholder="Drop your signal..."
         className="w-full bg-transparent border border-white/5 rounded-2xl p-3 text-sm focus:outline-none focus:border-accent min-h-[120px]"
       />
