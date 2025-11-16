@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
@@ -19,7 +19,7 @@ enum ReactionType {
 }
 
 model User {
-  id            String     @id @default(cuid())
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
   walletAddress String     @unique
   role          Role       @default(USER)
   profile       Profile?
@@ -29,27 +29,31 @@ model User {
   comments      Comment[]
   messages      Message[]  @relation("MessageSender")
   notifications Notification[]
+  reactions     Reaction[]
+  sentTips      Tip[]      @relation("TipSender")
+  receivedTips  Tip[]      @relation("TipReceiver")
+  hostedSpaces  Space[]
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 }
 
 model Profile {
-  id           String   @id @default(cuid())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   handle       String   @unique
   displayName  String
   avatarUrl    String?
   bio          String?
-  userId       String   @unique
+  userId       String   @unique @db.ObjectId
   user         User     @relation(fields: [userId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
 
 model Post {
-  id        String      @id @default(cuid())
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
   body      String
   mediaUrl  String?
-  authorId  String
+  authorId  String      @db.ObjectId
   author    User        @relation(fields: [authorId], references: [id])
   tags      String[]
   comments  Comment[]
@@ -60,55 +64,55 @@ model Post {
 }
 
 model Comment {
-  id        String   @id @default(cuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   body      String
-  postId    String
+  postId    String   @db.ObjectId
   post      Post     @relation(fields: [postId], references: [id])
-  authorId  String
+  authorId  String   @db.ObjectId
   author    User     @relation(fields: [authorId], references: [id])
   createdAt DateTime @default(now())
 }
 
 model Reaction {
-  id        String       @id @default(cuid())
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
   type      ReactionType
-  postId    String
+  postId    String       @db.ObjectId
   post      Post         @relation(fields: [postId], references: [id])
-  userId    String
+  userId    String       @db.ObjectId
   user      User         @relation(fields: [userId], references: [id])
   createdAt DateTime     @default(now())
   @@unique([postId, userId, type])
 }
 
 model Follow {
-  id          String   @id @default(cuid())
-  followerId  String
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  followerId  String   @db.ObjectId
   follower    User     @relation("followers", fields: [followerId], references: [id])
-  followingId String
+  followingId String   @db.ObjectId
   following   User     @relation("following", fields: [followingId], references: [id])
   createdAt   DateTime @default(now())
   @@unique([followerId, followingId])
 }
 
 model Tip {
-  id        String   @id @default(cuid())
-  postId    String?
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String?  @db.ObjectId
   post      Post?    @relation(fields: [postId], references: [id])
-  senderId  String
+  senderId  String   @db.ObjectId
   sender    User     @relation("TipSender", fields: [senderId], references: [id])
-  receiverId String
+  receiverId String   @db.ObjectId
   receiver   User     @relation("TipReceiver", fields: [receiverId], references: [id])
   token      String
-  amount     Decimal
+  amount     String   // MongoDB doesn't support Decimal, using String for precision
   txHash     String
   createdAt  DateTime @default(now())
 }
 
 model Space {
-  id           String   @id @default(cuid())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   title        String
   description  String
-  hostId       String
+  hostId       String   @db.ObjectId
   host         User     @relation(fields: [hostId], references: [id])
   status       String
   startTime    DateTime
@@ -119,35 +123,37 @@ model Space {
 }
 
 model Conversation {
-  id           String   @id @default(cuid())
-  participants User[]
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  participantIds String[] @db.ObjectId
   messages     Message[]
   createdAt    DateTime @default(now())
+  
+  @@map("conversations")
 }
 
 model Message {
-  id             String        @id @default(cuid())
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
   body           String
-  conversationId String
+  conversationId String        @db.ObjectId
   conversation   Conversation  @relation(fields: [conversationId], references: [id])
-  senderId       String
+  senderId       String        @db.ObjectId
   sender         User          @relation("MessageSender", fields: [senderId], references: [id])
   readAt         DateTime?
   createdAt      DateTime      @default(now())
 }
 
 model Report {
-  id         String   @id @default(cuid())
-  postId     String
-  reporterId String
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId     String   @db.ObjectId
+  reporterId String   @db.ObjectId
   reason     String
   status     String   @default("pending")
   createdAt  DateTime @default(now())
 }
 
 model Notification {
-  id        String   @id @default(cuid())
-  userId    String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id])
   type      String
   payload   Json
@@ -156,7 +162,7 @@ model Notification {
 }
 
 model AuthNonce {
-  id        String   @id @default(cuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   address   String
   nonce     String   @unique
   issuedAt  DateTime @default(now())

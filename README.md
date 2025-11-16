@@ -98,7 +98,7 @@ The project includes:
 
 **Frontend (Vercel):**
 - `NEXT_PUBLIC_API_BASE` - Your API URL
-- `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` - WalletConnect Project ID
+- `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` - `fec85250c884733a5110f2aa3d6c9429`
 
 **Backend (Separate deployment):**
 - `DATABASE_URL` - PostgreSQL connection string
@@ -107,6 +107,20 @@ The project includes:
 - `SIWE_*` - Sign-In with Ethereum configuration
 
 See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete setup instructions.
+
+## Backend Setup
+
+**Quick Start**: See [BACKEND_QUICKSTART.md](./BACKEND_QUICKSTART.md) for a checklist of what's needed.
+
+**Detailed Guide**: See [BACKEND_SETUP.md](./BACKEND_SETUP.md) for step-by-step backend setup instructions.
+
+### What's Needed:
+1. ✅ MongoDB database (configured with Atlas)
+2. ✅ Environment variables configured
+3. ✅ Database schema pushed to MongoDB
+4. ⏳ API server start (`npm run start:dev`)
+
+**MongoDB Connection**: Already configured and schema pushed successfully! 🎉
 
 ## Next Steps
 

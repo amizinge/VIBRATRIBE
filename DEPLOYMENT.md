@@ -51,7 +51,7 @@ NEXT_PUBLIC_CHAIN_ID=56
 NEXT_PUBLIC_RPC_URL=https://bsc-dataseed.binance.org
 
 # WalletConnect (Required)
-NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your-walletconnect-project-id
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=fec85250c884733a5110f2aa3d6c9429
 ```
 
 #### Optional Environment Variables

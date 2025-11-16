@@ -9,7 +9,7 @@ This document lists all required and optional environment variables for the VIBR
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `NEXT_PUBLIC_API_BASE` | Full URL to your API backend | `https://api.example.com/api` |
-| `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | WalletConnect Cloud Project ID | Get from [cloud.walletconnect.com](https://cloud.walletconnect.com) |
+| `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | WalletConnect Cloud Project ID | `fec85250c884733a5110f2aa3d6c9429` |
 
 ### Optional Variables
 
@@ -23,7 +23,7 @@ This document lists all required and optional environment variables for the VIBR
 
 ```bash
 NEXT_PUBLIC_API_BASE=https://your-api.railway.app/api
-NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your-project-id-here
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=fec85250c884733a5110f2aa3d6c9429
 NEXT_PUBLIC_CHAIN_ID=56
 NEXT_PUBLIC_RPC_URL=https://bsc-dataseed.binance.org
 ```
